@@ -10,23 +10,23 @@ pygame.init()
 screen = pygame.display.set_mode((800,600))
 
 #Background Image
-background = pygame.image.load('Background.png')
+background = pygame.image.load('./Backgrounds/Background.png')
 
 #Background Music
 
 # Caption and icon
 pygame.display.set_caption("Puppy Love")
-icon = pygame.image.load('Icon_Puppy.PNG')
+icon = pygame.image.load('./Original_Images_512px/Icon_Puppy.PNG')
 pygame.display.set_icon(icon)
 
 # Player Puppy
-puppy_image = pygame.image.load('player_puppy_128.png')
+puppy_image = pygame.image.load('./Icons/player_puppy_128.png')
 puppy_x = 350
 puppy_y = 450
 puppy_x_change = 0
 
 # Heart
-heart_image = pygame.image.load('Heart_70.png')
+heart_image = pygame.image.load('./Icons/Heart_70.png')
 heart_x = 0
 heart_y = 450
 heart_x_change = 0
@@ -34,13 +34,13 @@ heart_y_change = 10
 heart_state = "ready"
 
 # Things dogs love
-ball = pygame.image.load('Ball_100.png')
-dog_bone = pygame.image.load('dog_bone_100.png')
-dog_food = pygame.image.load('dog_food_100.png')
+ball = pygame.image.load('./Icons/Ball_100.png')
+dog_bone = pygame.image.load('./Icons/dog_bone_100.png')
+dog_food = pygame.image.load('./Icons/dog_food_100.png')
 
 # Things dogs hate
-cat = pygame.image.load('Cat_100.png')
-noise = pygame.image.load('noise_100.png')
+cat = pygame.image.load('./Icons/Cat_100.png')
+noise = pygame.image.load('./Icons/noise_100.png')
 
 love_hate_list = [ball,dog_bone,dog_food,cat,noise]
 thing_x = []
