@@ -12,7 +12,17 @@ screen = pygame.display.set_mode((800,600))
 #Background Image
 background = pygame.image.load('./Backgrounds/Background.png')
 
+# Score
+score_value = 0
+font = pygame.font.Font('freesansbold.ttf', 32)
+
+#Gameover Background and Font
+gameover_bg = pygame.image.load('./Backgrounds/Background_Heart.png')
+game_over_font = pygame.font.Font('freesansbold.ttf', 72)
+
 #Background Music
+mixer.music.load("./Music/bensound-jazzyfrenchy.wav")
+mixer.music.play(-1)
 
 # Caption and icon
 pygame.display.set_caption("Puppy Love")
@@ -55,12 +65,6 @@ for i in range(num_things):
     thing_x_change.append(random.randint(5,15))
     thing_y_change.append(40)
 
-# Score
-score_value = 0
-font = pygame.font.Font('freesansbold.ttf', 32)
-
-game_over_font = pygame.font.Font('freesansbold.ttf', 64)
-
 def player_puppy(x,y):
     screen.blit(puppy_image,(x,y))
 
@@ -79,39 +83,73 @@ def collide(thing_x, thing_y, heart_x, heart_y):
     else:
         return False
 
+def displayText(surface, text, size, x, y, color):
+    font_name = pygame.font.match_font('arial')
+    font = pygame.font.Font(font_name, size)
+    text_surface = font.render(text, True, color)
+    text_rect = text_surface.get_rect()
+    text_rect.midtop = (x,y)
+    surface.blit(text_surface, text_rect)
+
 def displayScore(x,y):
     score = font.render("SCORE: "+str(score_value), True, (0,0,0))
     screen.blit(score, (x,y))
 
+def show_go_screen(screen,score_value):
+
+    displayText(screen, "PUPPY LOVE", 72, 200, 280, (255,255,255))
+    displayText(screen, "Use right and left arrow keys to move \n Use Space to give love", 36, 200, 350, (255,255,255))
+    displayText(screen, "Press any KEY to begin", 36, 200, 400, (255,255,255))
+    pygame.display.flip()
+    waiting = True
+    while waiting:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.QUIT()
+            elif event.type == pygame.KEYDOWN:
+                waiting = False
+
 def game_over_text():
-    over_text = over_font.render("GAME OVER", True, (255, 255, 255))
+    global game_over_font
+    over_text = game_over_font.render("GAME OVER", True, (0, 0, 0))
     screen.blit(over_text, (200, 250))
 
-# Game Loop
+
+#Game Loop
+game_over = False
 running = True
 while running:
 
-    screen.fill((0, 0, 0)) #black
+    if game_over:
+        for j in range(num_things):
+            thing_y[j] = 2000
+        puppy_y = 2000
+        game_over_text()
+        pygame.time.wait(5000)
+        break
+
     screen.blit(background,(0,0))
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    # Keystrokes
-    if event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_LEFT:
-            puppy_x_change = -5
-        if event.key == pygame.K_RIGHT:
-            puppy_x_change = 5
-        if event.key == pygame.K_SPACE:
-            if heart_state is "ready":
-                heart_x = puppy_x
-                give_heart(heart_x,heart_y)
+        # Keystrokes
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                puppy_x_change = -5
+            if event.key == pygame.K_RIGHT:
+                puppy_x_change = 5
+            if event.key == pygame.K_SPACE:
+                if heart_state is "ready":
+                    bark = mixer.Sound('./Music/bark.wav')
+                    bark.play()
+                    heart_x = puppy_x
+                    give_heart(heart_x,heart_y)
 
-    if event.type == pygame.KEYUP:
-        if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-            puppy_x_change = 0
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                puppy_x_change = 0
 
     # Puppy Movement
     puppy_x += puppy_x_change
@@ -139,11 +177,17 @@ while running:
             heart_state = "ready"
 
             if love_hate_list[i] == ball or love_hate_list[i] == dog_bone or love_hate_list[i] == dog_food:
-                #play sound woof
+                score_sound = mixer.Sound('./Music/shooting_star.wav')
+                score_sound.play()
                 score_value += 1
-            elif love_hate_list == noise or love_hate_list == cat:
-                game_over_text()
-                break
+            elif love_hate_list[i] == noise:
+                loud_sound = mixer.Sound('./Music/Loud_Bang.wav')
+                loud_sound.play()
+                game_over = True
+            elif love_hate_list[i] == cat:
+                cat_sound = mixer.Sound('./Music/Cat.wav')
+                cat_sound.play()
+                game_over = True
             thing_x[i] = random.randint(0,736)
             thing_y[i] = random.randint(50,150)
 
