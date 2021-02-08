@@ -10,4 +10,6 @@ This game was designed using the pygame package in python. This game involves a 
 3. Install the requriements `pip install -r requirements.txt`
 4. Run the game using `python main_game.py`
 
-TODO: Add screenshots of game and how to play it
+HOW TO PLAY:
+* Use the arrow keys to move Kimahri side to side.
+* Use the space bar to shoot love at the things that she loves! 
